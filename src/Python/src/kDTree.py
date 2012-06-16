@@ -112,21 +112,21 @@ class Tree(object):
         else:
             return self.search(x.right, k)
 
-    def minimum(self, x): #RAW
-        while x.left != self.nil:
+    def minimum(self, x): #TEST
+        while x.left != NIL:
             x = x.left
         return x
 
-    def maximum(self, x): #RAW
-        while x.right != self.nil:
+    def maximum(self, x): #TEST
+        while x.right != NIL:
             x = x.right
         return x
 
-    def sucessor(self, x): #RAW
-        if x.right != self.nil:
+    def sucessor(self, x): #TEST
+        if x.right != NIL:
             return self.minimum(x.right)
         y = x.parent
-        while y != self.nil and x == y.right:
+        while y != NIL and x == y.right:
             x = y
             y = y.parent
         return y
@@ -138,7 +138,7 @@ class Tree(object):
             u.parent.left = v
         else:
             u.parent.right = v
-        if v != self.nil:
+        if v != NIL:
             v.parent = u.parent
 
     def delete(self, z): #RAW
@@ -157,7 +157,7 @@ class Tree(object):
             y.left.parent = y
 
     def inorder_walk(self, x, lista): #RAW
-        if x != self.nil:
+        if x != NIL:
             self.inorder_walk(x.left, lista)
             lista.append( x )
             self.inorder_walk(x.right, lista)
