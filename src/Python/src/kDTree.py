@@ -12,33 +12,52 @@ class Node():
 
     #Constants    
     IND_D = -1      # Indeterminate dimension or depth
-    X_D   =  1      # X dimension
-    Y_D   =  2      # Y dimension
-    Z_D   =  3      # Z dimension
-    T_D   =  4      # T "Time" dimension (representative of 4th dimension)
+    X_D = 1      # X dimension
+    Y_D = 2      # Y dimension
+    Z_D = 3      # Z dimension
+    T_D = 4      # T "Time" dimension (representative of 4th dimension)
     
-    def __init__(self, key = [0], value = "", parent = None, left = None, \
-                 right = None, k = IND_D, depth = IND_D):
+    def __init__(self, key=[0], value="", parent=None, left=None, \
+                 right=None, k=IND_D, depth=IND_D):
         '''
         Constructor
         '''
-        self.key        = key       # Key List
-        self.value      = value     # Node Value
-        self.parent     = parent    # Parent Node
-        self.left       = left      # Left Node
-        self.right      = right     # Right Node
-        self.k          = k         # 'K' dimension
-        self.depth      = depth     # Node depth
+        self.key = key       # Key List
+        self.value = value     # Node Value
+        self.parent = parent    # Parent Node
+        self.left = left      # Left Node
+        self.right = right     # Right Node
+        self.k = k         # 'K' dimension
+        self.depth = depth     # Node depth
         pass
     
     def __str__(self):
-        return str(self.key) + " <" + str(self.k) + "D>: '" + self.value + "' ( " + str(self.parent.key) + \
-            ", " + str(self.left.key) + ", " + str(self.right.key) + ")"
+        if self.left == None:
+            left = "None"
+        elif self.left == NIL:
+            left = "NIL"
+        else:
+            left = self.left.key
+        if self.right == None:
+            right = "None"
+        elif self.right == NIL:
+            right = "NIL"
+        else:
+            right = self.right.key
+        if self.parent == None:
+            parent = "None"
+        elif self.parent == NIL:
+            parent = "NIL"
+        else:
+            parent = self.parent.key
+            
+        return str(self.key) + " <" + str(self.k) + "D>: '" + self.value + "' ( " + str(parent) + \
+            ", " + str(left) + ", " + str(right) + ")"
 
 
     def compareKeys(self, keyToCompare):
         if self.k > 1:
-            selectedKey = (self.depth + 1)  % self.k
+            selectedKey = (self.depth + 1) % self.k
         else:
             selectedKey = 0
         if self.key[selectedKey] < keyToCompare[selectedKey]:    # smaller
@@ -50,6 +69,7 @@ class Node():
         pass
     pass #Class
 NIL = Node([0], "NIL") # Empty "NIL" Node
+
 
 class Tree(object):
     '''
@@ -100,29 +120,31 @@ class Tree(object):
         z.k = y.k
         pass
     
-    def sort(self):
-        
-        pass
-    
-    def search(self, x, k): #TEST
-        if x == self.nil or x.compareKeys(k) == 0:
+    def search(self, k, x=None):
+        if k == NIL: #If k is NIL then doesn't worth to search it 
+            return k
+        elif x == None: #Set Root as default search
+            x = self.root
+        if x == NIL or x.key == k.key:
             return x
-        if x.compareKeys(k) > 0:
-            return self.search(x.left, k)
+        if x.compareKeys(k.key) > 0:
+            return self.search(k, x.left)
         else:
-            return self.search(x.right, k)
+            return self.search(k, x.right)
 
-    def minimum(self, x): #TEST
+    def minimum(self, x):
         while x.left != NIL:
             x = x.left
         return x
 
-    def maximum(self, x): #TEST
+    def maximum(self, x):
         while x.right != NIL:
             x = x.right
         return x
 
-    def sucessor(self, x): #TEST
+    def sucessor(self, x):
+        if x == NIL:
+            return NIL
         if x.right != NIL:
             return self.minimum(x.right)
         y = x.parent
@@ -130,6 +152,13 @@ class Tree(object):
             x = y
             y = y.parent
         return y
+    
+    def inorder_walk(self, x, lista): #RAW
+        if x != NIL:
+            self.inorder_walk(x.left, lista)
+            lista.append(x)
+            self.inorder_walk(x.right, lista)
+    
 
     def transplant(self, u, v): #RAW
         if u.parent == self.nil:
@@ -156,10 +185,8 @@ class Tree(object):
             y.left = z.left
             y.left.parent = y
 
-    def inorder_walk(self, x, lista): #RAW
-        if x != NIL:
-            self.inorder_walk(x.left, lista)
-            lista.append( x )
-            self.inorder_walk(x.right, lista)
+    def sort(self):
+        
+        pass
     
     pass #class
