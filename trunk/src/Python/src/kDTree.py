@@ -132,12 +132,16 @@ class Tree(object):
         else:
             return self.search(k, x.right)
 
-    def minimum(self, x):
+    def minimum(self, x = None):
+        if x == None:
+            x = self
         while x.left != NIL:
             x = x.left
         return x
 
     def maximum(self, x):
+        if x == None:
+            x = self
         while x.right != NIL:
             x = x.right
         return x
@@ -153,25 +157,33 @@ class Tree(object):
             y = y.parent
         return y
     
-    def inorder_walk(self, x, lista): #RAW
+    def inorder_walk(self, x=None, nodeList = []): #TEST
+        if x == None:
+            x = self
         if x != NIL:
-            self.inorder_walk(x.left, lista)
-            lista.append(x)
-            self.inorder_walk(x.right, lista)
+            self.inorder_walk(x.left, nodeList)
+            nodeList.append(x)
+            self.inorder_walk(x.right, nodeList)
     
 
-    def transplant(self, u, v): #RAW
-        if u.parent == self.nil:
+    def transplant(self, u, v):
+        if u.parent == NIL:
             self.root = v
         elif u == u.parent.left:
             u.parent.left = v
         else:
             u.parent.right = v
         if v != NIL:
+            x = v.parent
             v.parent = u.parent
+            u.parent = x
+            if v == x.left:
+                x.left = u
+            else:
+                x.right = u
 
     def delete(self, z): #RAW
-        if z.left == self.nil:
+        if z.left == NIL:
             self.transplant(z, z.right)
         elif z.right == self.nil:
             self.transplant(z, z.left)
