@@ -17,60 +17,40 @@ UNSUP = "Unsupported / Unimplemented yet"
 def main():
     
     #Build nodes
-    node1 = Node([3, 1], "a")
-    node2 = Node([2, 7], "b")
-    node3 = Node([6, 9], "c")
-    node4 = Node([2, 2], "d")
-    node5 = Node([9, 9], "e")
-    node6 = Node([3, 2], "f")
-    node7 = Node([8, 4], "g")
-    node8 = Node([5, 7], "h")
-    node9 = Node([7, 1], "i")
-    node10 = Node([1, 3], "j")
-    node11 = Node([0, 8], "k")
-    node12 = Node([4, 5], "l")
-    node13 = Node([7, 9], "m")
+    nodes = []
+    nodes.append(Node([3, 1], "a"))
+    nodes.append(Node([2, 7], "b"))
+    nodes.append(Node([6, 9], "c"))
+    nodes.append(Node([2, 2], "d"))
+    nodes.append(Node([9, 9], "e"))
+    nodes.append(Node([3, 2], "f"))
+    nodes.append(Node([8, 4], "g"))
+    nodes.append(Node([5, 7], "h"))
+    nodes.append(Node([7, 1], "i"))
+    nodes.append(Node([1, 3], "j"))
+    nodes.append(Node([0, 8], "k"))
+    nodes.append(Node([4, 5], "l"))
+    nodes.append(Node([7, 9], "m"))
     
     #Build Tree
-    tree = Tree(node1, 2)
-    tree.insert(node2)
-    tree.insert(node3)
-    tree.insert(node4)
-    tree.insert(node5)
-    tree.insert(node6)
-    tree.insert(node7)
-    tree.insert(node8)
-    tree.insert(node9)
-    tree.insert(node10)
-    tree.insert(node11)
-    tree.insert(node12)
-    tree.insert(node13)
+    tree = Tree(nodes[0], 2)
+    for i in range(1, 13):
+        tree.insert(nodes[i])
     
     #Print Structure 
     print "- Tree Structure ----------"
-    print str(tree.root)
-    print str(node2)
-    print str(node3)
-    print str(node4)
-    print str(node5)
-    print str(node6)
-    print str(node7)
-    print str(node8)
-    print str(node9)
-    print str(node10)
-    print str(node11)
-    print str(node12)
-    print str(node13)
+    for i in range(0, 13):
+        print str(i) + ": " + str(nodes[i])
     
     
     #Search Node by Key
     print "\n - Search 4 different nodes ----------"
-    print "Node11\nS#" + str(node11)
-    print "R#" + str(tree.search(node11))
-    print "Node12\nS#" + str(node12)
-    print "R#" + str(tree.search(node12))
-    print "Node9\nS#" + str(node9)
-    print "R#" + str(tree.search(node9))
+    print "Node11\nS#" + str(nodes[11])
+    print "R#" + str(tree.search(nodes[11]))
+    print "Node12\nS#" + str(nodes[12])
+    print "R#" + str(tree.search(nodes[12]))
+    print "Node9\nS#" + str(nodes[9])
+    print "R#" + str(tree.search(nodes[9]))
     print "NIL Node\nS#" + str(kDTree.NIL)
     print "R#" + str(tree.search(kDTree.NIL))
     
@@ -91,11 +71,18 @@ def main():
     print "Predecessor Node from Minimum Node: " + UNSUP
     
     #Get In order Walk from Root Node
-    print "In order walk from root Node: " + UNSUP
+    nodelist = list()
+    tree.inorder_walk(tree.root, nodelist)
+    print "In order walk from root Node:"
+    for value in map(lambda value: str(value), nodelist):
+        print value
     
     #Transplant Node
-    print "Transplant Node3 to Node 6:" + UNSUP
-    
+    tree.transplant(nodes[3], nodes[6])
+    print "\nTransplant Node3 to Node 6:"
+    for i in range(0, 13):
+        print str(i) + ": " + str(nodes[i])
+        
     #Remove Node
     print "Remove Node7: " + UNSUP
     
