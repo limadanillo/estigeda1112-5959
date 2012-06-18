@@ -1,8 +1,11 @@
 # -*- coding:utf-8 -*-
 '''
-Created on June 4th, 2012
-
-@author: Miguel Rodrigues, 5959
+Escola Superior de Tecnologias e Gestão de Beja - ESTIG
+Licenciatura em Engenharia Informática - 9119
+Estrura de Dados e Algoritmos - EDA
+-----------------------------------
+Criado no dia 4 de Junho de 2012
+@author: Miguel de Campos Rodrigues - 5959
 '''
 import math
 
