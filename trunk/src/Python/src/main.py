@@ -73,7 +73,7 @@ def main():
     #Get In order Walk from Root Node
     nodelist = list()
     tree.inorder_walk(tree.root, nodelist)
-    print "In order walk from root Node:"
+    print "\nIn order walk from root Node:"
     for value in map(lambda value: str(value), nodelist):
         print value
     
@@ -83,14 +83,20 @@ def main():
     for i in range(0, 13):
         print str(i) + ": " + str(nodes[i])
         
-    #Remove Node
-    print "Remove Node7: " + UNSUP
+    #Remove Node3
+    tree.delete(nodes[2])
+    print "\nRemove Node2: "
+    for i in range(0, 13):
+        print str(i) + ": " + str(nodes[i])
     
     #Balance Tree (Sort)
-    print "Sort / Balance Tree: " + UNSUP
-    
+    print "\nSort / Balance Tree: " + UNSUP
+    tree.sort(tree.root, kDTree.NIL, 1)
+    for i in range(0, 13):
+        print str(i) + ": " + str(nodes[i])
     pass
 
+#Módulo de main
 if __name__ == '__main__':
     main()
     pass
