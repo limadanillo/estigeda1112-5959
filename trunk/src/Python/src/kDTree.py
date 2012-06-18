@@ -4,6 +4,7 @@ Created on June 4th, 2012
 
 @author: Miguel Rodrigues, 5959
 '''
+import math
 
 class Node():
     '''
@@ -71,19 +72,24 @@ class Node():
 
 
     def compareKeys(self, keyToCompare):
+        """
+        Compara duas chaves na dimensão da chave a ser comparada (instanciada na própria classe).
+        @param keyToCompare: A chave a comparar;
+        @return: Devolve 1 se a chave a comparar for maior; 0 se for igual; -1 se for menor.
+        """
         if self.k > 1:
             selectedKey = (self.depth + 1) % self.k
         else:
             selectedKey = 0
-        if self.key[selectedKey] < keyToCompare[selectedKey]:    # smaller
+        if self.key[selectedKey] < keyToCompare[selectedKey]:    # chave menor
             return -1
-        elif self.key[selectedKey] > keyToCompare[selectedKey]:  # bigger
+        elif self.key[selectedKey] > keyToCompare[selectedKey]:  # chave maior
             return 1
-        else:                                                 # same key
+        else:                                                 # chave igual
             return 0
         pass
     pass #Class
-NIL = Node([0], "NIL") # Empty "NIL" Node
+NIL = Node([0], "NIL") # Nó vazio "NIL"
 
 
 class Tree(object):
@@ -122,7 +128,7 @@ class Tree(object):
         
         y = NIL
         x = self.root
-        while x != NIL: #Explores the tree until it reach the bottom.
+        while x != NIL: #Explora a árvore até chegar ao fundo.
             y = x
             if x.compareKeys(z.key) > 0: 
                 x = x.left
@@ -132,7 +138,7 @@ class Tree(object):
             pass
         z.parent = y
         if y == NIL:
-            self.root = z # Tree was Empty
+            self.root = z # A árvore está vazia
         elif y.compareKeys(z.key) > 0:
             y.left = z
         else:
@@ -152,9 +158,9 @@ class Tree(object):
         Se k for 'NIL' então devolve 'NIL'
         
         """
-        if k == NIL: #If k is NIL then doesn't worth to search it 
+        if k == NIL: #Se k for NIL então devolve directamente outro NIL. 
             return k
-        elif x == None: #Set Root as default search
+        elif x == None: #Define x como raiz da árvore se x for igual a None
             x = self.root
         if x == NIL or x.key == k.key:
             return x
@@ -162,7 +168,62 @@ class Tree(object):
             return self.search(k, x.left)
         else:
             return self.search(k, x.right)
-
+        
+    def nearestSearch(self, k = [], x=None): #Test
+        '''
+        Procura um nó utilizando o método de pesquisa do elemento mais próximo (NN - nearest-neighbor search).
+        @param k: o ponto de referência com as coordenadas de acordo com a dimensão da árvore.
+        @param x: o nó para identificação do ráio de procura. Por prédefinição define como raiz da árvore.
+        @return devolve o nó mais próximo "espacialmente" do ponto de referência k.
+          
+        '''
+        if k == None: #Se k for None então devolve directamente um NIL.
+            return NIL
+        elif x == None: #Define x como raiz da árvore se x for igual a None
+            x = self.root
+        if x == NIL or x.key == k: #Devolve x se X for NIL ou se k for igual a x
+            return x
+        q = x
+        
+        # 1.Explora a árvore até encontrar o melhor nó actual.
+        while q != NIL:       
+            currentBest = q 
+            if q.compareKeys(k) > 0:
+                q = q.left
+            else:
+                q = q.right
+                pass
+            pass
+        ##2. Verifica se o nó x está mais perto (espacialmente) que o melhor nó actual.
+        #if  self.pitagorasTheorem(x.key, k) < self.pitagorasTheorem(currentBest.key, k):
+        #    currentBest = x
+            
+        #2. Procura o ponto mais baixo Dentro do nó X
+        #Calcula a diagonal entre os dois pontos (Teorema de Pitágoras)
+        
+        nodeList = []
+        self.inorder_walk(x, nodeList)
+        for node in nodeList:
+            if self.pitagorasTheorem(node.key, k) < self.pitagorasTheorem(currentBest.key, k):
+                currentBest = node
+                pass
+            pass
+        
+        #Devolve o nó mais proximo "espacialmente" de k.
+        return currentBest;
+            
+    def pitagorasTheorem(self, point1, point2):
+        """
+        Calcula a diagonal entre dois pontos multi-dimensionais:
+        @param point1: ponto inical
+        @param point2: ponto final
+        @return Devolve a distância diagonal entre o ponto 1 e o ponto 2
+        """
+        sqrdCatets = 0
+        for i in range(0, len(point1)):
+            sqrdCatets += math.pow(point1[i] - point2[i], 2)
+        return math.sqrt(sqrdCatets)
+    
     def minimum(self, x=None):
         """
         Devolve o nó mais à esquerda (menor) na árvore.
@@ -205,7 +266,7 @@ class Tree(object):
             y = y.parent
         return y
     
-    def inorder_walk(self, x=None, nodeList = []): #TEST
+    def inorder_walk(self, x=None, nodeList = []):
         """
         Cria uma lista com todas os nós ordenados de forma sequêncial.
         @param x=None: o nó ao qual começa a ler. Ao manter 'None' utiliza a raiz da árvore por defeito;
@@ -331,22 +392,33 @@ class Tree(object):
         #Devolve o nó ordenado.
         return medianNode
     
+    
+    
     def __getMedian(self, nodeList, depth):
-            #Obtém as chaves na correspondente dimensão em relação à sua profundidade na árvore
-            keys = map(lambda value: value.key[self.getDim(depth)], nodeList)
-            
-            #Calcula a média
-            mean = sum(keys) / len(keys)
-            
-            #Procura o valor mais aproximado da média (nó mediano)
-            for i in range(0, len(keys)):
-                if keys[i] >= mean:
-                    return nodeList[i]
-                pass
+        '''
+        Obtém o nó mediano (o mais a meio) da lista.
+        @param nodeList: a lista ordenada de nós a avaliar.
+        @param depth: a profundidade do nó na árvore para identificação da sua dimensão.
+        @return: O nó mediano.
+        '''
+        #Obtém as chaves na correspondente dimensão em relação à sua profundidade na árvore
+        keys = map(lambda value: value.key[self.getDim(depth)], nodeList)
+        
+        #Calcula a média
+        mean = sum(keys) / len(keys)
+        
+        #Procura o valor mais aproximado da média (nó mediano)
+        for i in range(0, len(keys)):
+            if keys[i] >= mean:
+                return nodeList[i]
             pass
+        pass
     
     def getDim(self, depth):
-        
-        #Devolve a profundidade da arvore em relação à sua raiz
+        """
+        Devolve a dimensão do nó em relação à profundidade entre o mesmo sua raiz da árvore.
+        @param depth: A profundidade do nó na árvore.
+        @return: A dimensão ao qual o nó se assenta.
+        """
         return (depth - 1) % self.root.k
     pass #class
