@@ -90,12 +90,16 @@ def main():
         print str(i) + ": " + str(nodes[i])
     
     #Balance Tree (Sort)
-    print "\nSort / Balance Tree: " + UNSUP
+    print "\nSort / Balance Tree: "
     tree.sort(tree.root, kDTree.NIL, 1)
     for i in range(0, 13):
         print str(i) + ": " + str(nodes[i])
     pass
 
+    #Search for Nearest-neighbor
+    print "\nSearch for Nearest-neighbor of [4, 8]:"
+    print str(tree.nearestSearch([4, 8], tree.root))
+    
 #Módulo de main
 if __name__ == '__main__':
     main()
