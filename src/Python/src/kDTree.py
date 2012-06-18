@@ -104,25 +104,28 @@ class Tree(object):
     def __init__(self, root, k):
         '''
         Inicializa uma nova instancia de uma árvore binária tipo k-D Tree.
-        @param root: o nó que fica como raiz.
+        @param root: o nó que fica como raiz ou uma lista de nós.
         @param k: a dimensão ao qual a árvore trabalha.
         '''
         if root == None:
             self.root = NIL
-        else:
+        elif isinstance(root, Node):
             self.root = root
             self.root.depth = 1
             self.root.k = k
             self.root.parent = NIL
             self.root.left = NIL
             self.root.right = NIL
-            
+        elif isinstance(root, list):
+            self.root = NIL
+            self.root.k = k
+            self.sort(root, NIL, 1)
             pass
         pass
     
     def insert(self, z):
         """
-        Insere um nó na árvore. A sua posição é aplicada automáticamente, dependendo do peso da sua chave.
+        Insere um nó na árvore. A sua posição é aplicada automaticamente, dependendo do peso da sua chave.
         @param z: o nó a inserir. É preciso que o nó tenha a mesma dimensão que a árvore.
         """
         z.left = NIL
@@ -172,7 +175,7 @@ class Tree(object):
         else:
             return self.search(k, x.right)
         
-    def nearestSearch(self, k = [], x=None): #Test
+    def nearestSearch(self, k = [], x=None):
         '''
         Procura um nó utilizando o método de pesquisa do elemento mais próximo (NN - nearest-neighbor search).
         @param k: o ponto de referência com as coordenadas de acordo com a dimensão da árvore.
@@ -217,7 +220,7 @@ class Tree(object):
             
     def pitagorasTheorem(self, point1, point2):
         """
-        Calcula a diagonal entre dois pontos multi-dimensionais:
+        Calcula a diagonal entre dois pontos multidimensionais:
         @param point1: ponto inical
         @param point2: ponto final
         @return Devolve a distância diagonal entre o ponto 1 e o ponto 2
@@ -271,7 +274,7 @@ class Tree(object):
     
     def inorder_walk(self, x=None, nodeList = []):
         """
-        Cria uma lista com todas os nós ordenados de forma sequêncial.
+        Cria uma lista com todas os nós ordenados de forma sequencial.
         @param x=None: o nó ao qual começa a ler. Ao manter 'None' utiliza a raiz da árvore por defeito;
         @param nodeList: a lista que recebe os nos nós sequenciados;
         
